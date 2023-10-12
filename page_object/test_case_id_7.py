@@ -12,7 +12,7 @@ def test_can_register_to_main_testing(browser):
     page.paste_email("ru.y@")
     page.paste_vosh_login("vv00.000.000")
     page.paste_snils("Садовый")
-    time.sleep(3)
+    time.sleep(5)
     page.check_date_has_no_numbers()
     page.check_wrong_email_message()
     page.check_wrong_login_message()

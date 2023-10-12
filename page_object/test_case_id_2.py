@@ -3,7 +3,7 @@ from .pages.success_page import SuccessPage
 import time
 import pytest
 
-@pytest.mark.negative
+@pytest.mark.positive
 @pytest.mark.ru
 def test_can_register_to_main_testing(browser):
     link = 'https://uts.sirius.online//#/auth/register/qainternship'
@@ -24,27 +24,12 @@ def test_can_register_to_main_testing(browser):
     page.paste_organisation("ГБОУ ЦО")
     page.paste_school("218")
     page.paste_grade("11")
-    page.choose_main_testing()
+    page.choose_extra_testing()
     page.confirm_input_data()
     page.accept_user_agreement()
     page.know_the_rules()
-    page.refresh()
-    page.check_last_name_is_empty()
-    page.check_first_name_is_empty()
-    page.check_patronymic_is_empty()
-    page.check_date_is_empty()
-    page.check_email_is_empty()
-    page.check_vosh_login_is_empty()
-    page.check_phone_is_empty()
-    page.check_snils_is_empty()
-    page.check_profession_is_empty()
-    page.check_country_is_not_selected()
-    page.check_city_is_empty()
-    page.check_organisation_is_empty()
-    page.check_school_is_empty()
-    page.check_grade_is_empty()
-    page.is_maintest_button_choosen()
-    page.is_extratest_button_choosen("NO")
-    page.is_input_data_choosen("NO")
-    page.is_user_agreement_choosen("NO")
-    page.is_know_the_rules_choosen("NO")
+    time.sleep(3)
+    page.go_to_testing()
+    page = SuccessPage(browser, browser.current_url)
+    page.confirm_title("Автостесты. Дополнительная олимпиада")
+    page.confirm_message(email)

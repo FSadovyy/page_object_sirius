@@ -177,6 +177,7 @@ class RegisterPage (BasePage):
 
     def is_extratest_button_choosen(self, choose="YES"):
         element = self.browser.find_element(*RegisterPageLocators.EXTRA_RADIOBUTTON)
+        time.sleep(2)
         if choose=="YES":
             assert "true" in element.get_attribute("class"), \
                 'Extra testing radiobutton must be choosen'

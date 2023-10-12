@@ -28,9 +28,9 @@ class RegisterPageLocators(PageLocators):
     ACCEPT_AGREEMENT_CHECKBOX =   (By.XPATH, '//*[@id="index"]/div/div[2]/div[4]/div/div/div[14]/div/label')
     FAMILIARIZED_RULES_CHECKBOX = (By.XPATH, '//*[@id="index"]/div/div[2]/div[4]/div/div/div[15]/div/label')
     TO_TESTING_BUTTON =           (By.CSS_SELECTOR, ".smt-register-form__register-btn")
-    EMAIL_ERROR =                 (By.XPATH, '//div[text()="Неверный email"]')
-    LOGIN_ERROR =                 (By.XPATH, '//div[text()="Неверный ВОШ-логин. Попробуйте ещё раз"]')
-    SNILS_NUMB_ERROR =            (By.XPATH, '//div[text()="СНИЛС должен содержать только цифры"]')
+    EMAIL_ERROR =                 (By.XPATH, '//*[@id="index"]/div/div[2]/div[4]/div/div/div[6]/div')
+    LOGIN_ERROR =                 (By.XPATH, '//*[@id="index"]/div/div[2]/div[4]/div/div/div[7]/div')
+    SNILS_NUMB_ERROR =            (By.XPATH, '//*[@id="index"]/div/div[2]/div[4]/div/div/div[9]/div')
 
 class SuccessPageLocators(PageLocators):
     TITLE = (By.CSS_SELECTOR, ".text-xxl")
@@ -43,11 +43,3 @@ class SuccessPageLocators(PageLocators):
 
 
 
-
-
-
-
-    #LOGIN_URL = "http://selenium1py.pythonanywhere.com/en-gb/accounts/login/"
-    #LOGIN_FORM = (By.CSS_SELECTOR, "#register_form")
-    #REGISTER_FORM = (By.CSS_SELECTOR, "#login_form")
-    #ADD_TO_CART_BUTTON = (By.CSS_SELECTOR, ".btn-add-to-basket")
