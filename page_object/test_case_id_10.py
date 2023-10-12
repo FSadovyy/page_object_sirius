@@ -1,11 +1,12 @@
 from .pages.register_page import RegisterPage
+from .pages.test_items import TestItems
 import pytest
 
 @pytest.mark.negative
 @pytest.mark.eng
 def test_can_register_to_main_testing(browser):
     link = 'https://uts.sirius.online//#/auth/register/qainternship'
-    email = "work.tolarius@yandex.ru"
+    email = TestItems.TESTMAIL
     page = RegisterPage(browser, link)
     page.open()
     page.switch_language_in_switcher()
@@ -16,7 +17,7 @@ def test_can_register_to_main_testing(browser):
     page.paste_email(email)
     page.paste_vosh_login("v00.000.000")
     page.paste_phone("88005553535")
-    page.paste_snils("17246215558")
+    page.paste_snils(TestItems.TESTSNILS)
     page.paste_profession("Тестировщик")
     page.choose_country("RU")
     page.paste_city("Москва")
