@@ -4,7 +4,7 @@ import pytest
 
 @pytest.mark.negative
 @pytest.mark.ru
-def test_can_register_to_main_testing(browser):
+def test_clean_forms_when_rerfresh_page_ru(browser):
     link = 'https://uts.sirius.online//#/auth/register/qainternship'
     email = TestItems.TESTMAIL
     page = RegisterPage(browser, link)

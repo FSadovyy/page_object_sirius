@@ -4,7 +4,7 @@ import time
 
 @pytest.mark.negative
 @pytest.mark.eng
-def test_can_register_to_main_testing(browser):
+def test_try_register_with_wrong_forms_en(browser):
     link = 'https://uts.sirius.online//#/auth/register/qainternship'
     page = RegisterPage(browser, link)
     page.open()

@@ -6,7 +6,7 @@ import pytest
 
 @pytest.mark.positive
 @pytest.mark.eng
-def test_can_register_to_main_testing(browser):
+def test_can_register_to_extra_testing_en(browser):
     link = 'https://uts.sirius.online//#/auth/register/qainternship'
     email = TestItems.TESTMAIL
     page = RegisterPage(browser, link)
