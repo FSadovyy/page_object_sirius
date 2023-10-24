@@ -1,36 +1,32 @@
 from .pages.register_page import RegisterPage
 from .pages.success_page import SuccessPage
-from .pages.test_items import TestItems
-import time
 import pytest
 
 @pytest.mark.positive
 @pytest.mark.ru
-def test_can_register_to_main_testing_ru(browser):
+def test_can_register_to_main_testing_ru(browser, valid_email):
     link = 'https://uts.sirius.online//#/auth/register/qainternship'
-    email = TestItems.TESTMAIL
     page = RegisterPage(browser, link)
     page.open()
-    page.paste_last_name("Садовый")
-    page.paste_first_name("Фёдор")
-    page.paste_patronymic("Витальевич")
-    page.paste_birth_date("12/11/2018")
-    page.paste_email(email)
-    page.paste_vosh_login("v00.000.000")
-    page.paste_phone("88005553535")
-    page.paste_snils(TestItems.TESTSNILS)
-    page.paste_profession("Тестировщик")
-    page.choose_country("RU")
-    page.paste_city("Москва")
-    page.paste_organisation("ГБОУ ЦО")
-    page.paste_school("218")
-    page.paste_grade("11")
-    page.choose_main_testing()
-    page.confirm_input_data()
-    page.accept_user_agreement()
-    page.know_the_rules()
-    time.sleep(5)
-    page.go_to_testing()
+    page.add_valid_items_in_obligatory_forms(
+        "Садовый",
+        "Фёдор",
+        "Витальевич",
+        "12/11/2018",
+        valid_email,
+        "v00.000.000",
+        "88005553535",
+        '17246215558',
+        "Тестировщик",
+        "RU",
+        "Москва",
+        "ГБОУ ЦО",
+        "218",
+        "11"
+    )
+    page.choose_radiobutton("RADIOBUTTON_MAIN_TEST")
+    page.confirm_all_checkboxes()
+    page.press_button("BUTTON_TO_TESTING")
     page = SuccessPage(browser, browser.current_url)
-    page.confirm_title("Автостесты. Основная олимпиада")
-    page.confirm_message(email)
+    page.check_text("Автостесты. Основная олимпиада", "TITLE")
+    page.confirm_email(valid_email, "MESSAGE")

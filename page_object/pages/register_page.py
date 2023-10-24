@@ -1,274 +1,150 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 from .base_page import BasePage
-from .locators import RegisterPageLocators
 import time
 
 class RegisterPage (BasePage):
-    def paste_last_name(self, text):
-        element = RegisterPageLocators.LAST_NAME_FORM
-        assert self.is_element_present(*element), "Last name form is not found"
-        element = self.browser.find_element(*element)
-        element.send_keys(text)
+    BUTTON_TO_TESTING = '.smt-register-form__register-btn'
+    CHECKBOX_ACCEPT_AGREEMENT = '.test-locator-sf-users-agreement-and-personal-data .ui-checkbox__input'
+    CHECKBOX_CONFIRM_VERACITY = '.test-locator-sf-confirmation-of-veracity .ui-checkbox__input'
+    CHECKBOX_FAMILIARIZED_RULES = '.test-locator-sf-familiarized-with-the-rules .ui-checkbox__input'
+    ERROR_EMAIL = '.test-locator-sf-email  .ui-schema-auth-form__error'
+    ERROR_LOGIN = '.test-locator-sf-vosh-login-optional  .ui-schema-auth-form__error'
+    ERROR_SNILS = '.test-locator-sf-snils-opt .ui-schema-auth-form__error'
+    FORM_BIRTH_DATE = '.test-locator-sf-birth-date .ui-date-time__input'
+    FORM_CITY = '.test-locator-sf-school-city .ui-textinput__input'
+    FORM_EMAIL = '.test-locator-sf-email .ui-textinput__input'
+    FORM_FIRST_NAME = '.test-locator-sf-firstName .ui-textinput__input'
+    FORM_GRADE = '.test-locator-sf-school-grade .ui-textinput__input'
+    FORM_LAST_NAME = '.test-locator-sf-lastName .ui-textinput__input'
+    FORM_ORGANISATION = '.test-locator-sf-school-organization .ui-textinput__input'
+    FORM_PATRONYMIC = '.test-locator-sf-patronymic .ui-textinput__input'
+    FORM_PHONE = '.test-locator-sf-phone .ui-textinput__input'
+    FORM_PROFESSION = '.test-locator-sf-profession .ui-textinput__input'
+    FORM_SCHOOL = '.test-locator-sf-school-school .ui-textinput__input'
+    FORM_SNILS = '.test-locator-sf-snils-opt .ui-textinput__input'
+    FORM_VOSH_LOGIN = '.test-locator-sf-vosh-login-optional .ui-textinput__input'
+    FORM_COUNTRY = ".test-locator-sf-school-country .ui-schema-auth-form__country-select"
+    LIST_DATEKEEPER = '.react-datepicker__month-container'
+    RADIOBUTTON_EXTRA_TEST = '[role="radiogroup"]:nth-child(2) .ui-schema-auth-form__enum-input-radio'
+    RADIOBUTTON_MAIN_TEST = '[role="radiogroup"]:nth-child(1) .ui-schema-auth-form__enum-input-radio'
 
-    def check_last_name_is_empty(self):
-        element = self.browser.find_element(*RegisterPageLocators.LAST_NAME_FORM)
-        assert element.get_attribute("value") == "", \
-            'Last name form must be empty'
+    def add_valid_items_in_obligatory_forms(self, *args):
+       obligatory_forms = [
 
-    def paste_first_name(self, text):
-        element=RegisterPageLocators.FIRST_NAME_FORM
-        assert self.is_element_present(*element), "First name form is not found"
-        self.browser.find_element(*element).send_keys(text)
+        'FORM_LAST_NAME',
+        'FORM_FIRST_NAME',
+        'FORM_PATRONYMIC',
+        'FORM_BIRTH_DATE',
+        'FORM_EMAIL',
+        'FORM_VOSH_LOGIN',
+        'FORM_PHONE',
+        'FORM_SNILS',
+        'FORM_PROFESSION',
+        'FORM_COUNTRY',
+        'FORM_CITY',
+        'FORM_ORGANISATION',
+        'FORM_SCHOOL',
+        'FORM_GRADE'
 
-    def check_first_name_is_empty(self):
-        element = self.browser.find_element(*RegisterPageLocators.FIRST_NAME_FORM)
-        assert element.get_attribute("value") == "", \
-            'First name form must be empty'
+       ]
 
-    def paste_patronymic(self, text):
-        element=RegisterPageLocators.PATRONYMIC_FORM
-        assert self.is_element_present(*element), "Patronymic form is not found"
-        self.browser.find_element(*element).send_keys(text)
+       for index in range(len (args)):
+           self.paste_data_in_form(args[index],
+                                   obligatory_forms[index]
+                                   )
 
-    def check_patronymic_is_empty(self):
-        element = self.browser.find_element(*RegisterPageLocators.PATRONYMIC_FORM)
-        assert element.get_attribute("value") == "", \
-            'Patronymic form must be empty'
 
-    def paste_birth_date(self, text):
-        element=RegisterPageLocators.BIRTH_DATE_FORM
-        assert self.is_element_present(*element), "Birth date form is not found"
-        self.browser.find_element(*element).send_keys(text)
-        time.sleep(3)
+    def paste_data_in_form (self, text, locator):
+        element = self.check_element (locator)
+        if locator == "FORM_COUNTRY":
+            select = Select(element)
+            select.select_by_value(text)
+        else:
+            element.send_keys(text)
+            if locator == "FORM_BIRTH_DATE":
+                time.sleep(2)
 
-    def check_date_is_empty(self):
-        element = self.browser.find_element(*RegisterPageLocators.BIRTH_DATE_FORM)
-        assert element.get_attribute("value") == "", \
-            'Burth date form must be empty'
 
-    def check_date_has_no_numbers(self):
-        element = self.browser.find_element(*RegisterPageLocators.BIRTH_DATE_FORM)
+    def confirm_all_checkboxes (self):
+        boxes =  [
+            'CHECKBOX_CONFIRM_VERACITY',
+            'CHECKBOX_ACCEPT_AGREEMENT',
+            'CHECKBOX_FAMILIARIZED_RULES'
+                  ]
+
+        for index in range(3):
+            self.confirm_checkbox(boxes[index])
+
+
+
+    def check_data_has_no_numbers(self, form):
+        element = self.check_element(form)
         element.click()
         result = element.get_attribute("value")
         for index in range(len(result)):
-            if index not in (2, 5, 10):
-                assert result[index] in "0123456789", 'Burth date must contain only numbers'
+            if (form == "Birth date form") and (index in (2, 5, 10)):
+                continue
+            else:
+                assert result[index] in "0123456789", f'{form} must contain only numbers'
 
-    def paste_email(self, text):
-        element=RegisterPageLocators.EMAIL_FORM
-        assert self.is_element_present(*element), "First name form is not found"
-        self.browser.find_element(*element).send_keys(text)
 
-    def check_email_is_empty(self):
-        element = self.browser.find_element(*RegisterPageLocators.EMAIL_FORM)
-        assert element.get_attribute("value") == "", \
-            'Email form must be empty'
-
-    def paste_vosh_login(self, text):
-        element=RegisterPageLocators.VOSH_LOGIN_FORM
-        assert self.is_element_present(*element), "First name form is not found"
-        self.browser.find_element(*element).send_keys(text)
-
-    def check_vosh_login_is_empty(self):
-        element = self.browser.find_element(*RegisterPageLocators.VOSH_LOGIN_FORM)
-        assert element.get_attribute("value") == "", \
-            'Vosh login form must be empty'
-
-    def paste_phone(self, text):
-        element=RegisterPageLocators.PHONE_FORM
-        assert self.is_element_present(*element), "First name form is not found"
-        self.browser.find_element(*element).send_keys(text)
-
-    def check_phone_is_empty(self):
-        element = self.browser.find_element(*RegisterPageLocators.PHONE_FORM)
-        assert element.get_attribute("value") == "", \
-            'Phone form must be empty'
-
-    def paste_snils (self, text):
-        element=RegisterPageLocators.SNILS_FORM
-        assert self.is_element_present(*element), "First name form is not found"
-        self.browser.find_element(*element).send_keys(text)
-
-    def check_snils_is_empty(self):
-        element = self.browser.find_element(*RegisterPageLocators.SNILS_FORM)
-        assert element.get_attribute("value") == "", \
-            'SNILS form must be empty'
-
-    def paste_profession (self, text):
-        element=RegisterPageLocators.PROFESSION_FORM
-        assert self.is_element_present(*element), "First name form is not found"
-        self.browser.find_element(*element).send_keys(text)
-
-    def check_profession_is_empty(self):
-        element = self.browser.find_element(*RegisterPageLocators.PROFESSION_FORM)
-        assert element.get_attribute("value") == "", \
-            'Profession form must be empty'
-
-    def choose_country (self, value):
-        element=RegisterPageLocators.COUNTRY_LIST
-        assert self.is_element_present(*element), "First name form is not found"
-        select = Select(self.browser.find_element(*element))
-        select.select_by_value(value)
-
-    def check_country_is_not_selected(self):
-        element = self.browser.find_element(*RegisterPageLocators.COUNTRY_LIST)
-        assert element.get_attribute("value") == "", \
-            'Country must not be selected'
-
-    def paste_city (self, text):
-        element=RegisterPageLocators.CITY_FORM
-        assert self.is_element_present(*element), "First name form is not found"
-        self.browser.find_element(*element).send_keys(text)
-
-    def check_city_is_empty(self):
-        element = self.browser.find_element(*RegisterPageLocators.CITY_FORM)
-        assert element.get_attribute("value") == "", \
-            'City form must be empty'
-
-    def paste_organisation (self, text):
-        element=RegisterPageLocators.ORGANISATION_FORM
-        assert self.is_element_present(*element), "Organisation form is not found"
-        self.browser.find_element(*element).send_keys(text)
-
-    def check_organisation_is_empty(self):
-        element = self.browser.find_element(*RegisterPageLocators.ORGANISATION_FORM)
-        assert element.get_attribute("value") == "", \
-            'Organisation form must be empty'
-
-    def paste_school (self, text):
-        element=RegisterPageLocators.SCHOOL_FORM
-        assert self.is_element_present(*element), "School form is not found"
-        self.browser.find_element(*element).send_keys(text)
-
-    def check_school_is_empty(self):
-        element = self.browser.find_element(*RegisterPageLocators.SCHOOL_FORM)
-        assert element.get_attribute("value") == "", \
-            'School form must be empty'
-
-    def paste_grade (self, text):
-        element = RegisterPageLocators.GRADE_FORM
-        assert self.is_element_present(*element), "Grade form is not found"
-        self.browser.find_element(*element).send_keys(text)
-
-    def check_grade_is_empty(self):
-        element = self.browser.find_element(*RegisterPageLocators.GRADE_FORM)
-        assert element.get_attribute("value") == "", \
-            'Grade form must be empty'
-
-    def choose_main_testing(self):
-        element = RegisterPageLocators.MAIN_RADIOBUTTON
-        assert self.is_element_present(*element), "Main test radiobutton is not found"
-        self.browser.find_element(*element).click()
-
-    def is_maintest_button_choosen(self, choose="YES"):
-        element = self.browser.find_element(*RegisterPageLocators.MAIN_RADIOBUTTON)
-        if choose=="YES":
-            assert "true" in element.get_attribute("class"), \
-                'Main testing radiobutton must be choosen'
-        if choose=="NO":
-            assert "false" in element.get_attribute("class"), \
-                'Main testing radiobutton must not be choosen'
-
-    def choose_extra_testing(self):
-        element = RegisterPageLocators.EXTRA_RADIOBUTTON
-        assert self.is_element_present(*element), "Extra test radiobutton is not found"
-        self.browser.find_element(*element).click()
-
-    def is_extratest_button_choosen(self, choose="YES"):
-        element = self.browser.find_element(*RegisterPageLocators.EXTRA_RADIOBUTTON)
-        time.sleep(2)
-        if choose=="YES":
-            assert "true" in element.get_attribute("class"), \
-                'Extra testing radiobutton must be choosen'
-        if choose=="NO":
-            assert "false" in element.get_attribute("class"), \
-                'Extra testing radiobutton must not be choosen'
-
-    def confirm_input_data(self):
-        element = RegisterPageLocators.CONFIRM_DATA_CHECKBOX
-        assert self.is_element_present(*element), 'Checkbox "Confirm input data" is not found'
-        self.browser.find_element(*element).click()
-
-    def is_input_data_choosen(self, choose="YES"):
-        element = self.browser.find_element(*RegisterPageLocators.CONFIRM_DATA_CHECKBOX)
-        unset = "ui-schema-auth-form__checkbox-unset"
-        if choose=="YES":
-            assert unset not in element.get_attribute("class"), \
-                'Checkbox "Confirm input data" must be choosen'
-        if choose=="NO":
-            assert unset in element.get_attribute("class"), \
-                'Checkbox "Confirm input data" must not be choosen'
-
-    def accept_user_agreement(self):
-        element = RegisterPageLocators.ACCEPT_AGREEMENT_CHECKBOX
-        assert self.is_element_present(*element), 'Checkbox "Accept user agreement and consent personal data processing" is not found'
-        self.browser.find_element(*element).click()
-
-    def is_user_agreement_choosen(self, choose="YES"):
-        element = self.browser.find_element(*RegisterPageLocators.ACCEPT_AGREEMENT_CHECKBOX)
-        unset = "ui-schema-auth-form__checkbox-unset"
-        if choose=="YES":
-            assert unset not in element.get_attribute("class"), \
-                'Checkbox "Accept user agreement and consent personal data processing" must be choosen'
-        if choose=="NO":
-            assert unset in element.get_attribute("class"), \
-                'Checkbox "Accept user agreement and consent personal data processing" must not be choosen'
-
-    def know_the_rules(self):
-        element = RegisterPageLocators.FAMILIARIZED_RULES_CHECKBOX
-        assert self.is_element_present(*element), 'Checkbox "Familiarized with the rules" is not found'
-        self.browser.find_element(*element).click()
-
-    def is_know_the_rules_choosen(self, choose="YES"):
-        element = self.browser.find_element(*RegisterPageLocators.FAMILIARIZED_RULES_CHECKBOX)
-        unset = "ui-schema-auth-form__checkbox-unset"
-        if choose=="YES":
-            assert unset not in element.get_attribute("class"), \
-                'Checkbox "Familiarized with the rules" must be choosen'
-        if choose=="NO":
-            assert unset in element.get_attribute("class"), \
-                'Checkbox "Familiarized with the rules" must not be choosen'
-
-    def check_reg_button_is_active(self, choose="YES"):
-        element = RegisterPageLocators.TO_TESTING_BUTTON
-        assert self.is_element_present(*element), \
-            'Button "To testing" is not found'
-        element = self.browser.find_element(*element)
+    def check_element_is_active (self, element, choose="YES"):
         if choose == "YES":
             assert element.is_enabled(), \
-                'Button "To testing" is not enabled'
+                f'{element} is not enabled'
         if choose == "NO":
             assert element.is_enabled() is False, \
-                'Button "To testing" must be disabled'
+                f'{element} must be disabled'
 
-    def go_to_testing(self):
-        element = RegisterPageLocators.TO_TESTING_BUTTON
-        self.check_reg_button_is_active()
-        self.browser.find_element(*element).click()
+
+    def check_form_is_empty (self, form):
+        element = self.check_element(form)
+        assert element.get_attribute("value") == "", \
+            f'{form} must be empty'
+
+
+    def choose_radiobutton(self, button):
+        element = self.check_element(button)
+        element.click()
+
+
+    def confirm_checkbox(self, checkbox_name):
+        element = self.check_element(checkbox_name)
+        element.click()
+
+
+    def is_checkbox_confirmed (self, checkbox_name, choose="YES"):
+        element = self.check_element(checkbox_name)
+        unset = "ui-schema-auth-form__checkbox-unset"
+        if choose=="YES":
+            assert unset not in element.get_attribute("class"), \
+                f'{checkbox_name} must be choosen'
+        if choose=="NO":
+            assert unset in element.get_attribute("class"), \
+                f'{checkbox_name} must not be choosen'
+
+
+    def is_radiobutton_choosen(self, button, choose="YES"):
+        element = self.check_element(button)
+        if button=="Extra testing":
+            time.sleep(2)
+        if choose=="YES":
+            assert "true" in element.get_attribute("class"), \
+                f'{button} must be choosen'
+        if choose=="NO":
+            assert "false" in element.get_attribute("class"), \
+                f'{button} must not be choosen'
+
+
+    def press_button(self, button):
+        element = self.check_element(button)
         time.sleep(3)
-
-    def check_wrong_email_message(self):
-        element = RegisterPageLocators.EMAIL_ERROR
-        assert self.is_element_present(*element), \
-            'Message "Неверный email" is not found'
-
-    def check_wrong_login_message(self):
-        element = RegisterPageLocators.LOGIN_ERROR
-        assert self.is_element_present(*element), \
-            'Message "Неверный ВОШ-логин. Попробуйте ещё раз" is not found'
-
-    def check_snils_only_with_numbers_message(self):
-        element = RegisterPageLocators.SNILS_NUMB_ERROR
-        assert self.is_element_present(*element), \
-            'Message "СНИЛС должен содержать только цифры" is not found'
+        self.check_element_is_active(element)
+        element.click()
 
 
 
-    #def go_to_login_page(self):
-        #login_link = self.browser.find_element(*MainPageLocators.LOGIN_LINK)
-        #login_link.click()
-       # try:
-           # alert = self.browser.switch_to.alert
-           # alert.accept()
-       # except: pass
+
+
+

@@ -1,39 +1,44 @@
 from selenium.common.exceptions import NoSuchElementException as no_element
+from selenium.webdriver.common.by import By
 from .locators import PageLocators
 
 class BasePage:
-    LANGUAGES = {
-        "RU": PageLocators.RUSSIAN,
-        "ENG": PageLocators.ENGLISH
-    }
+    LANG_SWITCHER = '.lang_switcher'
+    ENG = '.lang_switcher__flag-en'
+    RU = '.lang_switcher__flag-ru'
 
     def __init__(self, browser, url, timeout=5):
         self.url = url
         self.browser = browser
         self.browser.implicitly_wait(timeout)
 
-    def open(self):
+    def check_text(self, text, attribute):
+        element = self.check_element(attribute)
+        message = element.text
+        assert message == text, \
+            f'{attribute} contain wrong text: {message}'
+
+
+    def check_element (self, locator):
+        locator = getattr(self, locator)
+        try: self.browser.find_element(By.CSS_SELECTOR, locator)
+        except no_element:
+            f"Element '{locator}' is not found"
+        return self.browser.find_element(By.CSS_SELECTOR, locator)
+
+
+    def open (self):
         self.browser.get(self.url)
 
-    def is_element_present(self, how, what):
-        try: self.browser.find_element(how, what)
-        except no_element:
-            return False
-        return True
 
-    def refresh(self):
+    def refresh (self):
         self.browser.refresh()
 
-    def assert_language(self, what_language):
-        language = self.LANGUAGES[what_language]
-        assert self.is_element_present(*language), \
-            "Target language is not found"
 
     def switch_language_in_switcher(self, what_language="ENG"):
-        assert self.is_element_present(*PageLocators.LANG_SWITCHER), \
-            "Switcher is not presented"
-        self.browser.find_element(*PageLocators.LANG_SWITCHER).click()
-        self.assert_language(what_language)
-        self.browser.find_element(*self.LANGUAGES[what_language]).click()
+        element = self.check_element("LANG_SWITCHER")
+        element.click()
+        language = self.check_element(what_language)
+        language.click()
 
 

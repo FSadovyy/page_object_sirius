@@ -9,6 +9,10 @@ def pytest_addoption(parser):
                      default="chrome",
                      help="Choose one: '--browser_name=chrome', '--browser_name=firefox'")
 
+    parser.addoption('--valid_email',
+                     action='store',
+                     default=None,
+                     help="Paste valid email for testing (optional). For example: '--valid_email=mycompany@yandex.ru'")
 
 @pytest.fixture(scope="function")
 def browser(request):
@@ -26,5 +30,12 @@ def browser(request):
     yield browser
     print("\nquit browser..")
     browser.quit()
+
+
+@pytest.fixture()
+def valid_email(request):
+    return request.config.getoption("valid_email")
+
+
 
 
