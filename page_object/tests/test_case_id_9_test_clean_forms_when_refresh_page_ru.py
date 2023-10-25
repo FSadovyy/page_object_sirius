@@ -1,9 +1,9 @@
-from .pages.register_page import RegisterPage
+from pages.register_page import RegisterPage
 import pytest
 
 @pytest.mark.negative
 @pytest.mark.ru
-def test_clean_forms_when_rerfresh_page_ru(browser, valid_email):
+def test_clean_forms_when_refresh_page_ru(browser, valid_email):
     link = 'https://uts.sirius.online//#/auth/register/qainternship'
     page = RegisterPage(browser, link)
     page.open()

@@ -1,13 +1,14 @@
-from .pages.register_page import RegisterPage
-from .pages.success_page import SuccessPage
+from pages.register_page import RegisterPage
+from pages.success_page import SuccessPage
 import pytest
 
 @pytest.mark.positive
-@pytest.mark.ru
-def test_can_register_to_extra_testing_ru(browser, valid_email):
+@pytest.mark.eng
+def test_can_register_to_main_testing_eng(browser, valid_email):
     link = 'https://uts.sirius.online//#/auth/register/qainternship'
     page = RegisterPage(browser, link)
     page.open()
+    page.switch_language_in_switcher()
     page.add_items_in_obligatory_forms(
         "Садовый",
         "Фёдор",
@@ -24,9 +25,9 @@ def test_can_register_to_extra_testing_ru(browser, valid_email):
         "218",
         "11"
     )
-    page.choose_radiobutton("RADIOBUTTON_EXTRA_TEST")
+    page.choose_radiobutton("RADIOBUTTON_MAIN_TEST")
     page.confirm_all_checkboxes()
     page.press_button("BUTTON_TO_TESTING")
     page = SuccessPage(browser, browser.current_url)
-    page.check_text("Автостесты. Дополнительная олимпиада", "TITLE")
+    page.check_text("Автостесты. Основная олимпиада", "TITLE")
     page.confirm_email(valid_email, "MESSAGE")

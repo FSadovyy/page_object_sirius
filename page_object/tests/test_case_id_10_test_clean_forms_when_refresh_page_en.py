@@ -1,10 +1,9 @@
-from .pages.register_page import RegisterPage
-from .pages.success_page import SuccessPage
+from pages.register_page import RegisterPage
 import pytest
 
-@pytest.mark.positive
+@pytest.mark.negative
 @pytest.mark.eng
-def test_can_register_to_main_testing_eng(browser, valid_email):
+def test_clean_forms_when_refresh_page_en(browser, valid_email):
     link = 'https://uts.sirius.online//#/auth/register/qainternship'
     page = RegisterPage(browser, link)
     page.open()
@@ -25,9 +24,8 @@ def test_can_register_to_main_testing_eng(browser, valid_email):
         "218",
         "11"
     )
-    page.choose_radiobutton("RADIOBUTTON_MAIN_TEST")
-    page.confirm_all_checkboxes()
-    page.press_button("BUTTON_TO_TESTING")
-    page = SuccessPage(browser, browser.current_url)
-    page.check_text("Автостесты. Основная олимпиада", "TITLE")
-    page.confirm_email(valid_email, "MESSAGE")
+    page.refresh()
+    page.confirm_all_forms_are_empty()
+    page.is_radiobutton_choosen("RADIOBUTTON_MAIN_TEST")
+    page.is_radiobutton_choosen("RADIOBUTTON_EXTRA_TEST", "NO")
+    page.all_checkbox_confirmed("NO")

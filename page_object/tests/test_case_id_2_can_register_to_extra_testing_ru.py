@@ -1,14 +1,13 @@
-from .pages.register_page import RegisterPage
-from .pages.success_page import SuccessPage
+from pages.register_page import RegisterPage
+from pages.success_page import SuccessPage
 import pytest
 
 @pytest.mark.positive
-@pytest.mark.eng
-def test_can_register_to_extra_testing_en(browser, valid_email):
+@pytest.mark.ru
+def test_can_register_to_extra_testing_ru(browser, valid_email):
     link = 'https://uts.sirius.online//#/auth/register/qainternship'
     page = RegisterPage(browser, link)
     page.open()
-    page.switch_language_in_switcher()
     page.add_items_in_obligatory_forms(
         "Садовый",
         "Фёдор",
