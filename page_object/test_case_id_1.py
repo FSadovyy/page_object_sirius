@@ -8,7 +8,7 @@ def test_can_register_to_main_testing_ru(browser, valid_email):
     link = 'https://uts.sirius.online//#/auth/register/qainternship'
     page = RegisterPage(browser, link)
     page.open()
-    page.add_valid_items_in_obligatory_forms(
+    page.add_items_in_obligatory_forms(
         "Садовый",
         "Фёдор",
         "Витальевич",

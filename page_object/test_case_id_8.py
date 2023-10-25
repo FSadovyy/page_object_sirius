@@ -9,13 +9,29 @@ def test_try_register_with_wrong_forms_en(browser):
     page = RegisterPage(browser, link)
     page.open()
     page.switch_language_in_switcher()
-    page.paste_birth_date("23.12.АБББ")
-    page.paste_email("ru.y@")
-    page.paste_vosh_login("vv00.000.000")
-    page.paste_snils("Садовый")
-    time.sleep(5)
-    page.check_date_has_no_numbers()
-    page.check_wrong_email_message()
-    page.check_wrong_login_message()
-    page.check_snils_only_with_numbers_message()
-    page.check_reg_button_is_active("NO")
+    page.add_items_in_obligatory_forms(
+        "",
+        "",
+        "",
+        "23.12.АБББ",
+        "ru.y@",
+        "vv00.000.000",
+        "",
+        "Садовый",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+    )
+
+    time.sleep(3)
+    page.check_data_has_no_numbers("FORM_BIRTH_DATE")
+    page.check_text("Wrong email",
+                    "ERROR_EMAIL")
+    page.check_text("SNILS have to contains digits only",
+                    "ERROR_SNILS")
+    page.check_text("Vosh-login incorrect. Try again",
+                    "ERROR_LOGIN")
+    page.check_element_is_active("BUTTON_TO_TESTING", "NO")

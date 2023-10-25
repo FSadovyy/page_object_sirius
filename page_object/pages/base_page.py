@@ -1,6 +1,5 @@
 from selenium.common.exceptions import NoSuchElementException as no_element
 from selenium.webdriver.common.by import By
-from .locators import PageLocators
 
 class BasePage:
     LANG_SWITCHER = '.lang_switcher'
@@ -18,22 +17,18 @@ class BasePage:
         assert message == text, \
             f'{attribute} contain wrong text: {message}'
 
-
     def check_element (self, locator):
         locator = getattr(self, locator)
         try: self.browser.find_element(By.CSS_SELECTOR, locator)
         except no_element:
-            f"Element '{locator}' is not found"
+            raise f"Element '{locator}' is not found"
         return self.browser.find_element(By.CSS_SELECTOR, locator)
-
 
     def open (self):
         self.browser.get(self.url)
 
-
     def refresh (self):
         self.browser.refresh()
-
 
     def switch_language_in_switcher(self, what_language="ENG"):
         element = self.check_element("LANG_SWITCHER")

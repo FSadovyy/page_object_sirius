@@ -8,4 +8,4 @@ def test_try_register_with_empty_forms_en(browser):
     page = RegisterPage(browser, link)
     page.open()
     page.switch_language_in_switcher()
-    page.check_reg_button_is_active("NO")
+    page.check_element_is_active("BUTTON_TO_TESTING", "NO")

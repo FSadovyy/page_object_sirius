@@ -9,7 +9,7 @@ def test_can_register_to_main_testing_eng(browser, valid_email):
     page = RegisterPage(browser, link)
     page.open()
     page.switch_language_in_switcher()
-    page.add_valid_items_in_obligatory_forms(
+    page.add_items_in_obligatory_forms(
         "Садовый",
         "Фёдор",
         "Витальевич",
