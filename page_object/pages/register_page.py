@@ -29,6 +29,12 @@ class RegisterPage (BasePage):
     RADIOBUTTON_EXTRA_TEST = '[role="radio"]:nth-child(2) .ui-schema-auth-form__enum-input-radio'
     RADIOBUTTON_MAIN_TEST = '[role="radio"]:nth-child(1) .ui-schema-auth-form__enum-input-radio'
 
+    boxes_group = [
+        'CHECKBOX_CONFIRM_VERACITY',
+        'CHECKBOX_ACCEPT_AGREEMENT',
+        'CHECKBOX_FAMILIARIZED_RULES'
+    ]
+
     obligatory_forms = [
 
         'FORM_LAST_NAME',
@@ -48,11 +54,7 @@ class RegisterPage (BasePage):
 
     ]
 
-    boxes_group = [
-        'CHECKBOX_CONFIRM_VERACITY',
-        'CHECKBOX_ACCEPT_AGREEMENT',
-        'CHECKBOX_FAMILIARIZED_RULES'
-    ]
+
 
 
     def add_items_in_obligatory_forms(self, *args):
@@ -64,26 +66,10 @@ class RegisterPage (BasePage):
                                        self.obligatory_forms[index]
                                        )
 
-    def confirm_all_forms_are_empty(self):
-        for form in self.obligatory_forms:
-            self.check_form_is_empty(form)
 
-
-
-    def paste_data_in_form (self, text, locator):
-        element = self.check_element (locator)
-        if locator == "FORM_COUNTRY":
-            select = Select(element)
-            select.select_by_value(text)
-        else:
-            element.send_keys(text)
-            if locator == "FORM_BIRTH_DATE":
-                time.sleep(2)
-
-
-    def confirm_all_checkboxes (self):
-        for index in range(3):
-            self.confirm_checkbox(self.boxes_group[index])
+    def all_checkbox_confirmed(self, choose="YES"):
+        for box in self.boxes_group:
+            self.is_checkbox_confirmed(box, choose=choose)
 
 
 
@@ -119,14 +105,20 @@ class RegisterPage (BasePage):
         element = self.check_element(button)
         element.click()
 
+    def confirm_all_checkboxes(self):
+        for index in range(3):
+            self.confirm_checkbox(self.boxes_group[index])
+
+    def confirm_all_forms_are_empty(self):
+        for form in self.obligatory_forms:
+            self.check_form_is_empty(form)
+
 
     def confirm_checkbox(self, checkbox_name):
         element = self.check_element(checkbox_name)
         element.click()
 
-    def all_checkbox_confirmed(self, choose="YES"):
-        for box in self.boxes_group:
-            self.is_checkbox_confirmed(box, choose=choose)
+
 
     def is_checkbox_confirmed (self, checkbox_name, choose="YES"):
         element = self.check_element(checkbox_name)
@@ -149,6 +141,17 @@ class RegisterPage (BasePage):
         if choose=="NO":
             assert "false" in element.get_attribute("class"), \
                 f'Element "{button}" must not be choosen'
+
+
+    def paste_data_in_form (self, text, locator):
+        element = self.check_element (locator)
+        if locator == "FORM_COUNTRY":
+            select = Select(element)
+            select.select_by_value(text)
+        else:
+            element.send_keys(text)
+            if locator == "FORM_BIRTH_DATE":
+                time.sleep(2)
 
 
     def press_button(self, button):
